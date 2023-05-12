@@ -1,0 +1,50 @@
+DOCKER: b2c
+
+docker build -t img-b2c -f Dockerfile .
+ docker-compose up -d
+
+GOLANG compilar
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o b2c cmd/main.go
+
+ docker build -t img-b2c -f Dockerfile .
+ 
+ docker build --no-cache -t img-b2c -f Dockerfile .
+ docker network create --subnet=172.10.10.0/16 network-test
+
+ Aqui guarda el cache de todas la imagenes cualquier cambio
+ /var/lib/docker/overlay/
+ rm -rf /var/lib/docker
+
+
+1.- Tener instalado y corriendo apache.
+2.- Tener instalado y corriendo docker.
+3.- Crear una nueva red de docer.
+    - docker network create --subnet=172.10.10.0/16 network-test
+	
+4.- Crear la imagen docker:
+	- docker build -t img-b2c -f Dockerfile 
+ 
+5.- Crear y levantar el contenedor docker:
+	- docker-compose up -d
+
+6.- Verificar la Ip del contenedor
+	- docke inspect app-b2c
+	- En la parte final muestra la ip asignada al contenedor
+	
+7.- Configurara apache para el nuevo contenedor 
+	- /etc/httpd/conf/httpd.conf
+	- Asignar la ip del contenedor para que apache pueder redireccionar las peticiones
+	
+ Apache condguracion:
+ <VirtualHost *:8000>
+    ServerName comprarmas.com.mx
+
+    ProxyRequests Off
+    ProxyPreserveHost On
+    
+    ProxyPass / http://172.10.0.2:8000/
+    ProxyPassReverse / http://172.10.0.2:8000/
+</VirtualHost>
+
+8.- reiniciar el servidor apache
+	- systemctl restart httpd
