@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  marketplace:
+    container_name: app-b2c
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: img-b2c
+    environment:
+      port: 8000:8000
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 300M
+#        reservations:
+#          cpus: 0.5
+#          memory: 300M
+    restart: always
+    expose:
+      - "8000"
+      - "6379"
+    networks:
+      - network-test
+networks:
+  network-test:
+    external: true
